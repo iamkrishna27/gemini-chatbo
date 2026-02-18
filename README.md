@@ -45,3 +45,9 @@ Before you begin, ensure you have the following installed:
 ```bash
 git clone https://github.com/iamkrishna27/gemini-chatbo.git
 cd gemini-chatbo
+# Change this:
+API_KEY = "YOUR_API_KEY_HERE"
+
+# To your actual API key from Google AI Studio
+# Start the Flask server (from backend folder)
+python app.py
