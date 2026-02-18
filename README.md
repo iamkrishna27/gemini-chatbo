@@ -1,68 +1,47 @@
+# 🌍 EcoGuide - Environmental AI Chatbot
 
-### Create `requirements.txt` in `backend/` folder
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python Version">
+  <img src="https://img.shields.io/badge/Flask-2.3.3-green.svg" alt="Flask">
+  <img src="https://img.shields.io/badge/Gemini-2.5%20Flash-orange.svg" alt="Gemini API">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+</p>
 
----
+<p align="center">
+  A specialized AI chatbot focused exclusively on environmental topics, powered by Google's Gemini 2.5 Flash API.
+</p>
 
-## 📤 Step 2: Push to GitHub
+## ✨ Features
 
-### Method 1: Using VS Code Git Integration
+| Feature | Description |
+|---------|-------------|
+| 🎯 **Specialized Knowledge** | Focused only on environmental topics - climate change, renewable energy, pollution, biodiversity, sustainability |
+| 🚫 **Smart Restrictions** | Politely refuses off-topic questions (programming, entertainment, etc.) |
+| ⚡ **Fast Responses** | Powered by Gemini 2.5 Flash for quick, accurate answers |
+| 🎨 **Beautiful UI** | Green-themed, responsive design that works on desktop and mobile |
+| 💡 **Quick Topics** | Clickable tags for common environmental subjects |
+| 🔄 **Real-time Feedback** | Typing indicator and connection status |
+| 🌱 **Educational Focus** | Provides factual, helpful information about environmental issues |
 
-1. **Open VS Code** in your project folder (`gemini-chatbot/`)
+## 🛠️ Tech Stack
 
-2. **Initialize Git repository**
-   - Click on the **Source Control** icon in the left sidebar (or press `Ctrl+Shift+G`)
-   - Click **"Initialize Repository"**
-   - Select your project folder
+- **Backend**: Python 3.8+ with Flask
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **API**: Google Gemini 2.5 Flash
+- **Deployment**: Local server (can be deployed to cloud platforms)
 
-3. **Stage changes**
-   - You'll see all your files listed under "Changes"
-   - Click the **+** (plus) icon next to "Changes" to stage all files
-   - Or hover over each file and click the + to stage individually
+## 📋 Prerequisites
 
-4. **Commit changes**
-   - Type a commit message (e.g., "Initial commit: Environmental Chatbot")
-   - Click the checkmark (✓) to commit
+Before you begin, ensure you have the following installed:
 
-5. **Create GitHub repository**
-   - Go to [GitHub.com](https://github.com) and sign in
-   - Click the **+** icon in top right → **"New repository"**
-   - Name: `gemini-chatbot` (or any name you prefer)
-   - Description: "Environmental AI Chatbot powered by Gemini"
-   - Choose Public or Private
-   - **DO NOT** initialize with README (we already have one)
-   - Click **"Create repository"**
+- [Python](https://www.python.org/downloads/) 3.8 or higher
+- [Git](https://git-scm.com/downloads) for version control
+- A [Google AI Studio API key](https://aistudio.google.com/app/apikey)
 
-6. **Add remote and push**
-   - In VS Code, open terminal (`Ctrl+`` `)
-   - Run these commands:
-     ```bash
-     git remote add origin https://github.com/YOUR_USERNAME/gemini-chatbot.git
-     git branch -M main
-     git push -u origin main
-     ```
-   - Replace `YOUR_USERNAME` with your GitHub username
+## 🚀 Installation & Setup
 
-7. **Authenticate**
-   - A browser window might open for GitHub authentication
-   - Sign in and authorize VS Code
-
-### Method 2: Using Command Line
-
-Open terminal in your project folder and run:
+### 1. Clone the Repository
 
 ```bash
-# Initialize git repository
-git init
-
-# Add all files
-git add .
-
-# Commit
-git commit -m "Initial commit: Environmental Chatbot"
-
-# Add remote (replace with your username)
-git remote add origin https://github.com/YOUR_USERNAME/gemini-chatbot.git
-
-# Push to GitHub
-git branch -M main
-git push -u origin main
+git clone https://github.com/iamkrishna27/gemini-chatbo.git
+cd gemini-chatbo
