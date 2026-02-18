@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoGuide - Environmental AI Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a5f3a 0%, #2e8b57 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-container {
+            width: 500px;
+            max-width: 95%;
+            height: 700px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c7744 0%, #1a5f3a 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .topics {
+            background: #e8f5e9;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            border-bottom: 2px solid #a5d6a7;
+        }
+
+        .topic-tag {
+            background: #2e7d32;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .topic-tag:hover {
+            background: #1b5e20;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-message {
+            align-items: flex-end;
+        }
+
+        .bot-message {
+            align-items: flex-start;
+        }
+
+        .message-content {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            word-wrap: break-word;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .user-message .message-content {
+            background: #2e7d32;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message .message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .bot-message .message-content.off-topic {
+            border-left: 4px solid #f44336;
+            background: #fff3f3;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 15px 20px;
+            background: white;
+            border-top: 2px solid #a5d6a7;
+            gap: 10px;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #c8e6c9;
+            border-radius: 30px;
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        #user-input:focus {
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46,125,50,0.1);
+        }
+
+        #user-input::placeholder {
+            color: #9e9e9e;
+            font-style: italic;
+        }
+
+        #send-btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        #send-btn:hover:not(:disabled) {
+            background: #1b5e20;
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        #send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            padding: 12px 18px;
+            background: white;
+            border-radius: 20px;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2e7d32;
+            margin-right: 4px;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+            30% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        .status-bar {
+            background: #e8f5e9;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            color: #2e7d32;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #a5d6a7;
+            font-weight: 500;
+        }
+
+        .suggestion-box {
+            background: #f1f8e9;
+            padding: 10px 20px;
+            border-top: 1px solid #a5d6a7;
+        }
+
+        .suggestion-title {
+            font-size: 0.8rem;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .suggestion-chip {
+            background: white;
+            color: #2e7d32;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: 1px solid #a5d6a7;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            background: #2e7d32;
+            color: white;
+            border-color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <h1>
+                <span>🌍</span> EcoGuide <span>🌱</span>
+            </h1>
+            <p>Your specialized environmental AI assistant</p>
+            <div class="badge-container">
+                <span class="badge">🌡️ Climate</span>
+                <span class="badge">☀️ Energy</span>
+                <span class="badge">💧 Pollution</span>
+                <span class="badge">🦋 Biodiversity</span>
+                <span class="badge">♻️ Recycling</span>
+            </div>
+        </div>
+        
+        <div class="topics">
+            <button class="topic-tag" data-topic="climate change">🌡️ Climate Change</button>
+            <button class="topic-tag" data-topic="renewable energy">☀️ Renewable Energy</button>
+            <button class="topic-tag" data-topic="plastic pollution">💧 Plastic Pollution</button>
+            <button class="topic-tag" data-topic="recycling tips">♻️ Recycling</button>
+            <button class="topic-tag" data-topic="sustainable living">🌿 Sustainable Living</button>
+            <button class="topic-tag" data-topic="biodiversity">🦋 Biodiversity</button>
+        </div>
+
+        <div class="messages" id="messages">
+            <div class="message bot-message">
+                <div class="message-content">
+                    🌍 Hello! I'm EcoGuide, your environmental specialist.
+                    <br><br>
+                    I can help you with:
+                    <br>• Climate change & global warming
+                    <br>• Renewable energy solutions
+                    <br>• Pollution & waste management
+                    <br>• Conservation & biodiversity
+                    <br>• Sustainable living tips
+                    <br><br>
+                    🌱 What environmental topic would you like to explore today?
+                </div>
+            </div>
+        </div>
+
+        <div class="suggestion-box">
+            <div class="suggestion-title">💡 Try asking:</div>
+            <div class="suggestions">
+                <span class="suggestion-chip" data-question="How does solar energy work?">How does solar energy work?</span>
+                <span class="suggestion-chip" data-question="What causes global warming?">What causes global warming?</span>
+                <span class="suggestion-chip" data-question="How to reduce plastic waste?">Reduce plastic waste</span>
+                <span class="suggestion-chip" data-question="What is biodiversity?">What is biodiversity?</span>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span>🌿 Environmental Mode • Gemini 2.5</span>
+            <span id="status">🟢 Online</span>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Ask about environment, climate, sustainability..." autocomplete="off">
+            <button id="send-btn">➤</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesContainer = document.getElementById('messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const statusSpan = document.getElementById('status');
+
+        // Add message to chat
+        function addMessage(text, sender, isOffTopic = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('message-content');
+            
+            if (sender === 'bot' && isOffTopic) {
+                contentDiv.classList.add('off-topic');
+            }
+            
+            contentDiv.textContent = text;
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Show typing indicator
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('message', 'bot-message');
+            typingDiv.id = 'typing';
+            
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('typing-indicator');
+            typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+            
+            typingDiv.appendChild(typingIndicator);
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            statusSpan.textContent = '🟡 Thinking...';
+        }
+
+        // Hide typing indicator
+        function hideTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+            statusSpan.textContent = '🟢 Online';
+        }
+
+        // Send message to backend
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+
+            addMessage(message, 'user');
+            userInput.value = '';
+
+            showTyping();
+
+            try {
+                const response = await fetch('http://localhost:5000/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                hideTyping();
+
+                if (response.ok) {
+                    const isOffTopic = data.reply.includes("environmental topics only") || 
+                                      data.reply.includes("specialized in environmental topics");
+                    addMessage(data.reply, 'bot', isOffTopic);
+                } else {
+                    addMessage('Error: ' + (data.error || 'Something went wrong'), 'bot', true);
+                }
+            } catch (error) {
+                hideTyping();
+                addMessage('⚠️ Cannot connect to server. Make sure Flask is running on port 5000', 'bot', true);
+                console.error('Error:', error);
+                statusSpan.textContent = '🔴 Disconnected';
+            } finally {
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                userInput.focus();
+            }
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Topic tag clicks
+        document.querySelectorAll('.topic-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                const topic = tag.dataset.topic;
+                userInput.value = `Tell me about ${topic}`;
+                sendMessage();
+            });
+        });
+
+        // Suggestion chip clicks
+        document.querySelectorAll('.suggestion-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                userInput.value = chip.dataset.question;
+                sendMessage();
+            });
+        });
+
+        // Test backend connection
+        fetch('http://localhost:5000/test')
+            .then(response => response.json())
+            .then(data => console.log('✅ Connected to backend:', data))
+            .catch(error => {
+                console.log('❌ Backend not connected');
+                statusSpan.textContent = '🔴 Disconnected';
+                addMessage('⚠️ Please start the Flask backend server first (python app.py)', 'bot', true);
+            });
+    </script>
+</body>
+</html>
